@@ -93,3 +93,30 @@ func TestSendCase5(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+// case 6: 渠道发送失败，重试3次
+func TestSendCase6(t *testing.T) {
+	ctx := context.Background()
+	msg := message.New("hello world")
+	sc := sms.NewChannel()
+
+	vendor := newRetry()
+	vendor.AddListener(newListener(func(vendor channel.Vendor, err error) {
+		if tried < 3 {
+			if err == nil {
+				t.Error("expected error")
+			}
+		} else {
+			if err != nil {
+				t.Error(err)
+			}
+		}
+	}))
+	sc.Register(vendor)
+	sc.SetSelector(NewRetrySelector(3))
+
+	err := channel.SendWith(ctx, msg, sc)
+	if err != nil {
+		t.Error(err)
+	}
+}

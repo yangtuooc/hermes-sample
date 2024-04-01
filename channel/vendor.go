@@ -34,6 +34,13 @@ func (vs Vendors) MapById() map[string]Vendor {
 	return m
 }
 
+func (vs Vendors) First() Vendor {
+	if len(vs) > 0 {
+		return vs[0]
+	}
+	return nil
+}
+
 type VendorRegistry interface {
 	Register(vendor Vendor)
 }
