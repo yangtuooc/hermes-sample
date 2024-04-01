@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"hermes/channel"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
 type TencentConfig struct {
@@ -30,15 +30,15 @@ func (t *tencentVendor) Name() string {
 	return "腾讯云"
 }
 
-func (t *tencentVendor) AddListener(listener channel.Listener) {
+func (t *tencentVendor) AddListener(listener channel.VendorListener) {
 	t.listeners = append(t.listeners, listener)
 }
 
 func (t *tencentVendor) Send(ctx context.Context, message *message.Message) error {
-	t.listeners.OnRequest(ctx, message, nil)
+	t.listeners.OnRequest(ctx, message, t, nil)
 	marshal, _ := json.Marshal(message)
 	fmt.Println(string(marshal))
-	t.listeners.OnResponse(ctx, message, nil, nil)
+	t.listeners.OnResponse(ctx, message, t, nil, nil)
 	return nil
 }
 

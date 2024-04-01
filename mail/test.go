@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"hermes/channel"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
 var _ channel.Vendor = (*test)(nil)
@@ -26,17 +26,17 @@ func (t *test) Name() string {
 	return "test-mail"
 }
 
-func (t *test) AddListener(listener channel.Listener) {
+func (t *test) AddListener(listener channel.VendorListener) {
 	t.listeners = append(t.listeners, listener)
 }
 
 func (t *test) Send(ctx context.Context, message *message.Message) error {
 	marshal, _ := json.Marshal(message)
 	jsonStr := string(marshal)
-	t.listeners.OnRequest(ctx, message, jsonStr)
+	t.listeners.OnRequest(ctx, message, t, jsonStr)
 	result := fmt.Sprintln("send mail: ", jsonStr)
 	fmt.Println(result)
-	t.listeners.OnResponse(ctx, message, result, nil)
+	t.listeners.OnResponse(ctx, message, t, result, nil)
 	return nil
 }
 

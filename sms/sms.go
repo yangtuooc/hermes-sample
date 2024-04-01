@@ -3,21 +3,21 @@ package sms
 import (
 	"context"
 	"hermes/channel"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
-var _ channel.SwitchableChannel = (*smsChannel)(nil)
+var _ channel.AbstractChannel = (*smsChannel)(nil)
 
 type smsChannel struct {
-	delegate channel.SwitchableChannel
+	delegate channel.AbstractChannel
 }
 
 func (s *smsChannel) Register(vendor channel.Vendor) {
 	s.delegate.Register(vendor)
 }
 
-func (s *smsChannel) AddSelector(selector channel.Selector) {
-	s.delegate.AddSelector(selector)
+func (s *smsChannel) SetSelector(selector channel.VendorSelector) {
+	s.delegate.SetSelector(selector)
 }
 
 func (s *smsChannel) AddInterceptor(interceptor channel.Interceptor) {
@@ -36,15 +36,11 @@ func (s *smsChannel) Name() string {
 	return "sms-channel"
 }
 
-func (s *smsChannel) AddListener(listener channel.Listener) {
-	s.delegate.AddListener(listener)
-}
-
 func (s *smsChannel) Send(ctx context.Context, message *message.Message) error {
 	return s.delegate.Send(ctx, message)
 }
 
-func NewChannel() channel.SwitchableChannel {
+func NewChannel() channel.AbstractChannel {
 	return &smsChannel{
 		delegate: channel.NewDelegateChannel(),
 	}

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"hermes/channel"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
 var _ channel.MessageChannel = (*console)(nil)

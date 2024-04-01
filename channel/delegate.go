@@ -2,40 +2,23 @@ package channel
 
 import (
 	"context"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
-var _ SwitchableChannel = (*delegateMessageChannel)(nil)
+var _ AbstractChannel = (*delegateMessageChannel)(nil)
 
 type delegateMessageChannel struct {
-	vendors   Vendors
-	chain     InterceptorChain
-	selector  Selector
-	listeners Listeners
+	vendors  Vendors
+	chain    InterceptorChain
+	selector VendorSelector
 }
 
 func (a *delegateMessageChannel) Register(vendor Vendor) {
 	a.vendors = append(a.vendors, vendor)
 }
 
-func (a *delegateMessageChannel) AddSelector(selector Selector) {
+func (a *delegateMessageChannel) SetSelector(selector VendorSelector) {
 	a.selector = selector
-}
-
-func (a *delegateMessageChannel) Id() string {
-	return "abstract-channel"
-}
-
-func (a *delegateMessageChannel) Name() string {
-	return "abstract-channel"
-}
-
-func (a *delegateMessageChannel) Type() string {
-	return "abstract-channel"
-}
-
-func (a *delegateMessageChannel) AddListener(listener Listener) {
-	a.listeners = append(a.listeners, listener)
 }
 
 func (a *delegateMessageChannel) Send(ctx context.Context, message *message.Message) error {
@@ -51,10 +34,9 @@ func (a *delegateMessageChannel) AddInterceptor(interceptor Interceptor) {
 	a.chain = append(a.chain, interceptor)
 }
 
-func NewDelegateChannel() SwitchableChannel {
+func NewDelegateChannel() AbstractChannel {
 	return &delegateMessageChannel{
-		vendors:   make(Vendors, 0),
-		chain:     make(InterceptorChain, 0),
-		listeners: make(Listeners, 0),
+		vendors: make(Vendors, 0),
+		chain:   make(InterceptorChain, 0),
 	}
 }

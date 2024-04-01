@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"hermes/channel"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
 var _ channel.Interceptor = (*deduplicationInterceptor)(nil)
@@ -13,7 +13,7 @@ type deduplicationInterceptor struct {
 	sent map[string]bool
 }
 
-func (i *deduplicationInterceptor) Intercept(ctx context.Context, message *message.Message, vendor channel.Vendor) error {
+func (i *deduplicationInterceptor) Intercept(ctx context.Context, message *message.Message, vendor channel.MessageChannel) error {
 	if i.sent[message.GetRequestId()] {
 		return errors.New("message already sent")
 	}

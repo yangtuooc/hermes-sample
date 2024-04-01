@@ -2,18 +2,18 @@ package channel
 
 import (
 	"context"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
 type SelectedVendor func(vendor Vendor) error
 
-// Selector is a strategy to select a vendor to send a message
-type Selector interface {
+// VendorSelector is a strategy to select a vendor to send a message
+type VendorSelector interface {
 	Select(ctx context.Context, message *message.Message, vendors Vendors, selected SelectedVendor) error
 }
 
 // the default is a round-robin selector
-var _ Selector = (*roundRobinSelector)(nil)
+var _ VendorSelector = (*roundRobinSelector)(nil)
 
 type roundRobinSelector struct {
 }
@@ -28,6 +28,6 @@ func (r *roundRobinSelector) Select(ctx context.Context, message *message.Messag
 	return err
 }
 
-func NewRoundRobinSelector() Selector {
+func NewRoundRobinSelector() VendorSelector {
 	return &roundRobinSelector{}
 }

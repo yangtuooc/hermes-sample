@@ -2,18 +2,18 @@ package channel
 
 import (
 	"context"
-	"encoding/json"
-	"hermes/message"
+	"hermes/channel/message"
 )
+
+type MessageChannels []MessageChannel
 
 type MessageChannel interface {
 	Send(ctx context.Context, message *message.Message) error
 }
 
-var Console = func(ctx context.Context, msg *message.Message) error {
-	marshal, _ := json.Marshal(msg)
-	println(string(marshal))
-	return nil
+type InterceptableChannel interface {
+	MessageChannel
+	AddInterceptor(interceptor Interceptor)
 }
 
 func SendWith(ctx context.Context, msg *message.Message, channel MessageChannel) error {

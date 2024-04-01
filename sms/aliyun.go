@@ -3,7 +3,7 @@ package sms
 import (
 	"context"
 	"hermes/channel"
-	"hermes/message"
+	"hermes/channel/message"
 )
 
 type AliyunConfig struct {
@@ -28,7 +28,7 @@ func (a *aliyunVendor) Type() string {
 	return "sms"
 }
 
-func (a *aliyunVendor) AddListener(listener channel.Listener) {
+func (a *aliyunVendor) AddListener(listener channel.VendorListener) {
 	a.listeners = append(a.listeners, listener)
 }
 

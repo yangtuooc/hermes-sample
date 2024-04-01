@@ -2,13 +2,14 @@ package tests
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"hermes/channel"
+	"hermes/channel/message"
 	"hermes/console"
 	"hermes/mail"
-	"hermes/message"
 	"hermes/sms"
 	"testing"
+
+	"github.com/google/uuid"
 )
 
 // case 1: 使用通道发送一条消息，并将消息内容输出到控制台
@@ -51,7 +52,7 @@ func TestSendCase4(t *testing.T) {
 
 	sc := sms.NewChannel()
 	sc.Register(sms.Test())
-	sc.AddSelector(channel.NewRoundRobinSelector())
+	sc.SetSelector(channel.NewRoundRobinSelector())
 	sc.AddInterceptor(newDeduplicationInterceptor())
 
 	err := channel.SendWith(ctx, msg, sc)
@@ -65,16 +66,30 @@ func TestSendCase4(t *testing.T) {
 	}
 }
 
-// case 5: 短信通道供应商阿里云不可用时，使用腾讯云发送短信
+// case 5: 使用通道供应商优先选择A供应商，A供应商发送失败，选择B供应商
 func TestSendCase5(t *testing.T) {
-	//var aliyunVendor = func(ctx context.Context, msg *message.Message) error {
-	//	return errors.New("aliyun vendor not available")
-	//}
-	//
-	//var tencentVendor = func(ctx context.Context, msg *message.Message) error {
-	//	jsonBytes, _ := json.Marshal(msg)
-	//	fmt.Println(string(jsonBytes))
-	//	return nil
-	//}
+	ctx := context.Background()
+	msg := message.New("hello world")
+	sc := sms.NewChannel()
+	a := testA()
+	b := testB()
+	a.AddListener(newListener(func(vendor channel.Vendor, err error) {
+		if err == nil {
+			t.Error("expected error")
+		}
+	}))
+	b.AddListener(newListener(func(vendor channel.Vendor, err error) {
+		if err != nil {
+			t.Error(err)
+		}
+	}))
 
+	sc.Register(a)
+	sc.Register(b)
+	sc.SetSelector(newPrioritySelector([]string{a.Id(), b.Id()}))
+
+	err := channel.SendWith(ctx, msg, sc)
+	if err != nil {
+		t.Error(err)
+	}
 }
