@@ -19,10 +19,14 @@ func (t *test) Id() string {
 }
 
 func (t *test) Type() string {
-	return "test"
+	return "sms"
 }
 
 func (t *test) Name() string {
+	return "test"
+}
+
+func (t *test) Description() string {
 	return "test"
 }
 

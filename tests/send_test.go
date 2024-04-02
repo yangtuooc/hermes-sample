@@ -51,11 +51,14 @@ func TestSendCase4(t *testing.T) {
 	msg.SetRequestId(uuid.NewString())
 
 	sc := sms.NewChannel()
-	sc.Register(sms.Test())
+	err := sc.Register(sms.Test())
+	if err != nil {
+		t.Error(err)
+	}
 	sc.SetSelector(channel.NewRoundRobinSelector())
 	sc.AddInterceptor(newDeduplicationInterceptor())
 
-	err := channel.SendWith(ctx, msg, sc)
+	err = channel.SendWith(ctx, msg, sc)
 	if err != nil {
 		t.Error(err)
 	}
@@ -84,17 +87,23 @@ func TestSendCase5(t *testing.T) {
 		}
 	}))
 
-	sc.Register(a)
-	sc.Register(b)
+	err := sc.Register(a)
+	if err != nil {
+		t.Error(err)
+	}
+	err = sc.Register(b)
+	if err != nil {
+		t.Error(err)
+	}
 	sc.SetSelector(newPrioritySelector([]string{a.Id(), b.Id()}))
 
-	err := channel.SendWith(ctx, msg, sc)
+	err = channel.SendWith(ctx, msg, sc)
 	if err != nil {
 		t.Error(err)
 	}
 }
 
-// case 6: 渠道发送失败，重试3次
+// case 6: 通道发送失败，重试3次
 func TestSendCase6(t *testing.T) {
 	ctx := context.Background()
 	msg := message.New("hello world")
@@ -112,10 +121,52 @@ func TestSendCase6(t *testing.T) {
 			}
 		}
 	}))
-	sc.Register(vendor)
+	err := sc.Register(vendor)
+	if err != nil {
+		t.Error(err)
+	}
 	sc.SetSelector(NewRetrySelector(3))
 
-	err := channel.SendWith(ctx, msg, sc)
+	err = channel.SendWith(ctx, msg, sc)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+// case 7: 通过短信通道发送一条消息，指定发送渠道C
+func TestSendCase7(t *testing.T) {
+	ctx := context.Background()
+	msg := message.New("hello world")
+	sc := sms.NewChannel()
+
+	a := testA()
+	b := testB()
+	c := testC()
+
+	err := sc.Register(a)
+	if err != nil {
+		t.Error(err)
+	}
+	err = sc.Register(b)
+	if err != nil {
+		t.Error(err)
+	}
+	err = sc.Register(c)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sc.SetSelector(newSpecificSelector())
+
+	// not specified channel yet
+	err = channel.SendWith(ctx, msg, sc)
+	if err == nil {
+		t.Error("expected error")
+	}
+
+	// specify channel c
+	msg.SetHeader("vendorId", c.Id())
+	err = channel.SendWith(ctx, msg, sc)
 	if err != nil {
 		t.Error(err)
 	}

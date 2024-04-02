@@ -25,6 +25,10 @@ func (a *a) Name() string {
 	return "a channel"
 }
 
+func (a *a) Description() string {
+	return "a channel"
+}
+
 func (a *a) AddListener(listener channel.VendorListener) {
 	a.listeners = append(a.listeners, listener)
 }

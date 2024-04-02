@@ -8,11 +8,8 @@ import (
 type Vendors []Vendor
 
 type Vendor interface {
-	Id() string
-	Type() string
-	Name() string
 	AddListener(listener VendorListener)
-	MessageChannel
+	NamedChannel
 }
 
 type StrategyChannel interface {
@@ -20,10 +17,19 @@ type StrategyChannel interface {
 	SetSelector(selector VendorSelector)
 }
 
+type NamedChannel interface {
+	Id() string
+	Name() string
+	Type() string
+	Description() string
+	MessageChannel
+}
+
 type AbstractChannel interface {
 	InterceptableChannel
 	StrategyChannel
 	VendorRegistry
+	NamedChannel
 }
 
 func (vs Vendors) MapById() map[string]Vendor {
@@ -41,8 +47,17 @@ func (vs Vendors) First() Vendor {
 	return nil
 }
 
+func (vs Vendors) Find(id string) Vendor {
+	for _, v := range vs {
+		if v.Id() == id {
+			return v
+		}
+	}
+	return nil
+}
+
 type VendorRegistry interface {
-	Register(vendor Vendor)
+	Register(vendor Vendor) error
 }
 
 type VendorListener interface {

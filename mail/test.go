@@ -26,6 +26,10 @@ func (t *test) Name() string {
 	return "test-mail"
 }
 
+func (t *test) Description() string {
+	return "test mail"
+}
+
 func (t *test) AddListener(listener channel.VendorListener) {
 	t.listeners = append(t.listeners, listener)
 }

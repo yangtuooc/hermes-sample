@@ -28,6 +28,10 @@ func (r *retry) Name() string {
 	return "retry"
 }
 
+func (r *retry) Description() string {
+	return "retry"
+}
+
 func (r *retry) AddListener(listener channel.VendorListener) {
 	r.listener = append(r.listener, listener)
 }

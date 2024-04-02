@@ -2,6 +2,7 @@ package sms
 
 import (
 	"context"
+	"errors"
 	"hermes/channel"
 	"hermes/channel/message"
 )
@@ -12,8 +13,27 @@ type smsChannel struct {
 	delegate channel.AbstractChannel
 }
 
-func (s *smsChannel) Register(vendor channel.Vendor) {
-	s.delegate.Register(vendor)
+func (s *smsChannel) Id() string {
+	return "sms"
+}
+
+func (s *smsChannel) Name() string {
+	return "SMS Channel"
+}
+
+func (s *smsChannel) Type() string {
+	return "sms"
+}
+
+func (s *smsChannel) Description() string {
+	return "SMS Channel"
+}
+
+func (s *smsChannel) Register(vendor channel.Vendor) error {
+	if s.Type() != vendor.Type() {
+		return errors.New("vendor type mismatch, expected " + s.Type() + " but got " + vendor.Type())
+	}
+	return s.delegate.Register(vendor)
 }
 
 func (s *smsChannel) SetSelector(selector channel.VendorSelector) {
@@ -22,18 +42,6 @@ func (s *smsChannel) SetSelector(selector channel.VendorSelector) {
 
 func (s *smsChannel) AddInterceptor(interceptor channel.Interceptor) {
 	s.delegate.AddInterceptor(interceptor)
-}
-
-func (s *smsChannel) Id() string {
-	return "sms-channel"
-}
-
-func (s *smsChannel) Type() string {
-	return "sms-channel"
-}
-
-func (s *smsChannel) Name() string {
-	return "sms-channel"
 }
 
 func (s *smsChannel) Send(ctx context.Context, message *message.Message) error {

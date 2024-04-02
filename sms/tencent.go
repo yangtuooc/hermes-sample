@@ -30,6 +30,10 @@ func (t *tencentVendor) Name() string {
 	return "腾讯云"
 }
 
+func (t *tencentVendor) Description() string {
+	return "腾讯云短信"
+}
+
 func (t *tencentVendor) AddListener(listener channel.VendorListener) {
 	t.listeners = append(t.listeners, listener)
 }

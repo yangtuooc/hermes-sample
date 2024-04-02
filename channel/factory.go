@@ -32,6 +32,14 @@ func (f *factory) Register(id string, channel MessageChannel) {
 	f.registry[id] = channel
 }
 
-func NewFactory() MessageChannelFactory {
-	return &factory{registry: make(map[string]MessageChannel)}
+func NewFactory(pairs ...map[string]MessageChannel) MessageChannelFactory {
+	f := &factory{
+		registry: make(map[string]MessageChannel),
+	}
+	for _, pair := range pairs {
+		for id, channel := range pair {
+			f.Register(id, channel)
+		}
+	}
+	return f
 }

@@ -26,6 +26,10 @@ func (b *b) Name() string {
 	return "b channel"
 }
 
+func (b *b) Description() string {
+	return "b channel"
+}
+
 func (b *b) AddListener(listener channel.VendorListener) {
 }
 

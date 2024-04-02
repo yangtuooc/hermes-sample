@@ -28,6 +28,10 @@ func (a *aliyunVendor) Type() string {
 	return "sms"
 }
 
+func (a *aliyunVendor) Description() string {
+	return "阿里云短信通道"
+}
+
 func (a *aliyunVendor) AddListener(listener channel.VendorListener) {
 	a.listeners = append(a.listeners, listener)
 }

@@ -13,8 +13,25 @@ type delegateMessageChannel struct {
 	selector VendorSelector
 }
 
-func (a *delegateMessageChannel) Register(vendor Vendor) {
+func (a *delegateMessageChannel) Id() string {
+	panic("this is an abstract channel, it should be implemented by the concrete channel")
+}
+
+func (a *delegateMessageChannel) Name() string {
+	panic("this is an abstract channel, it should be implemented by the concrete channel")
+}
+
+func (a *delegateMessageChannel) Type() string {
+	panic("this is an abstract channel, it should be implemented by the concrete channel")
+}
+
+func (a *delegateMessageChannel) Description() string {
+	panic("this is an abstract channel, it should be implemented by the concrete channel")
+}
+
+func (a *delegateMessageChannel) Register(vendor Vendor) error {
 	a.vendors = append(a.vendors, vendor)
+	return nil
 }
 
 func (a *delegateMessageChannel) SetSelector(selector VendorSelector) {
