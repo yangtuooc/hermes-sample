@@ -3,6 +3,8 @@ package message
 const (
 	channelIdKey = "channelId"
 	requestIdKey = "requestId"
+	toKey        = "to"
+	fromKey      = "from"
 )
 
 type Message struct {
@@ -16,6 +18,18 @@ func (m *Message) SetHeader(key string, value any) {
 
 func (m *Message) GetHeader(key string) any {
 	return m.Headers[key]
+}
+
+func (m *Message) GetTo() []string {
+	to, ok := m.GetHeader(toKey).([]string)
+	if !ok {
+		return nil
+	}
+	return to
+}
+
+func (m *Message) SetTo(to []string) {
+	m.SetHeader(toKey, to)
 }
 
 func (m *Message) SetChannelId(channelId string) {
