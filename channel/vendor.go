@@ -8,20 +8,20 @@ import (
 type Vendors []Vendor
 
 type Vendor interface {
-	AddListener(listener VendorListener)
+	AddListener(listener VendorListener) // 添加消息通道的监听器
 	NamedChannel
 }
 
 type StrategyChannel interface {
 	MessageChannel
-	SetSelector(selector VendorSelector)
+	SetSelector(selector VendorSelector) // 设置消息通道的选择策略，用于选择消息通道的实际发送者
 }
 
 type NamedChannel interface {
-	Id() string
-	Name() string
-	Type() string
-	Description() string
+	Id() string          // 消息通道的唯一标识
+	Name() string        // 消息通道的名称
+	Type() string        // 消息通道的类型
+	Description() string // 消息通道的描述
 	MessageChannel
 }
 
@@ -57,12 +57,12 @@ func (vs Vendors) Find(id string) Vendor {
 }
 
 type VendorRegistry interface {
-	Register(vendor Vendor) error
+	Register(vendor Vendor) error // 注册消息通道
 }
 
 type VendorListener interface {
-	OnRequest(ctx context.Context, message *message.Message, vendor Vendor, request any)
-	OnResponse(ctx context.Context, message *message.Message, vendor Vendor, response any, err error)
+	OnRequest(ctx context.Context, message *message.Message, vendor Vendor, request any)              // 消息通道的请求监听器
+	OnResponse(ctx context.Context, message *message.Message, vendor Vendor, response any, err error) // 消息通道的响应监听器
 }
 
 type Listeners []VendorListener

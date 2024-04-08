@@ -53,7 +53,8 @@ func (a *delegateMessageChannel) AddInterceptor(interceptor Interceptor) {
 
 func NewDelegateChannel() AbstractChannel {
 	return &delegateMessageChannel{
-		vendors: make(Vendors, 0),
-		chain:   make(InterceptorChain, 0),
+		vendors:  make(Vendors, 0),
+		chain:    make(InterceptorChain, 0),
+		selector: NewRoundRobinSelector(), // default selector
 	}
 }

@@ -7,7 +7,7 @@ type MessageChannelFactory interface {
 }
 
 type Registry interface {
-	Register(id string, channel MessageChannel)
+	Register(channel NamedChannel)
 }
 
 var _ MessageChannelFactory = (*factory)(nil)
@@ -28,18 +28,16 @@ func (f *factory) GetChannel(id string) MessageChannel {
 	return f.registry[id]
 }
 
-func (f *factory) Register(id string, channel MessageChannel) {
-	f.registry[id] = channel
+func (f *factory) Register(channel NamedChannel) {
+	f.registry[channel.Id()] = channel
 }
 
-func NewFactory(pairs ...map[string]MessageChannel) MessageChannelFactory {
+func NewFactory(channels ...NamedChannel) MessageChannelFactory {
 	f := &factory{
 		registry: make(map[string]MessageChannel),
 	}
-	for _, pair := range pairs {
-		for id, channel := range pair {
-			f.Register(id, channel)
-		}
+	for _, channel := range channels {
+		f.Register(channel)
 	}
 	return f
 }

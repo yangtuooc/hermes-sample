@@ -1,7 +1,7 @@
 package message
 
 const (
-	channelIdKey = "channelId"
+	channelKey   = "channel"
 	requestIdKey = "requestId"
 	toKey        = "to"
 	fromKey      = "from"
@@ -32,12 +32,12 @@ func (m *Message) SetTo(to []string) {
 	m.SetHeader(toKey, to)
 }
 
-func (m *Message) SetChannelId(channelId string) {
-	m.SetHeader(channelIdKey, channelId)
+func (m *Message) SetChannel(channel string) {
+	m.SetHeader(channelKey, channel)
 }
 
 func (m *Message) ChannelId() string {
-	id, ok := m.GetHeader(channelIdKey).(string)
+	id, ok := m.GetHeader(channelKey).(string)
 	if !ok {
 		return ""
 	}

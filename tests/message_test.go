@@ -14,7 +14,7 @@ func TestMessage(t *testing.T) {
 		}
 	})
 	t.Run("channel id is set", func(t *testing.T) {
-		msg.SetChannelId("test")
+		msg.SetChannel("test")
 		if msg.ChannelId() != "test" {
 			t.Errorf("Expected channel id to be test, got %s", msg.ChannelId())
 		}
