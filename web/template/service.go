@@ -22,5 +22,12 @@ func (s *service) CreateClientTemplate(ctx context.Context, client *domain.Clien
 }
 
 func (s *service) GetTemplate(ctx context.Context, templateId string) (*domain.Template, error) {
-	return s.repo.FindByTemplateId(ctx, templateId)
+	template, err := s.repo.FindByTemplateId(ctx, templateId)
+	if err != nil {
+		return nil, err
+	}
+	if !template.Enabled {
+		return nil, domain.ErrTemplateDisabled
+	}
+	return template, nil
 }

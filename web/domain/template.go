@@ -2,8 +2,13 @@ package domain
 
 import (
 	"context"
+	"errors"
 	"gorm.io/gorm"
 	"strings"
+)
+
+var (
+	ErrTemplateDisabled = errors.New("template is disabled")
 )
 
 type Template struct {
