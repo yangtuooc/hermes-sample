@@ -14,10 +14,10 @@ type deduplicationInterceptor struct {
 }
 
 func (i *deduplicationInterceptor) Intercept(ctx context.Context, message *message.Message, vendor channel.MessageChannel) error {
-	if i.sent[message.GetRequestId()] {
+	if i.sent[message.RequestId()] {
 		return errors.New("message already sent")
 	}
-	i.sent[message.GetRequestId()] = true
+	i.sent[message.RequestId()] = true
 	return nil
 }
 

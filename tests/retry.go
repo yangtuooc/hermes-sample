@@ -39,8 +39,8 @@ func (r *retry) AddListener(listener channel.VendorListener) {
 func (r *retry) Send(ctx context.Context, message *message.Message) error {
 	var err error
 	if tried < 3 {
-		sprintln := fmt.Sprintf("send failed, retry the %d time\n", tried+1)
-		fmt.Println(sprintln)
+		info := fmt.Sprintf("send failed, retry the %d time\n", tried+1)
+		fmt.Println(info)
 		err = errors.New("retry")
 		r.listener.OnResponse(ctx, message, r, nil, err)
 	}

@@ -18,7 +18,7 @@ func (s *smsChannel) Id() string {
 }
 
 func (s *smsChannel) Name() string {
-	return "SMS Channel"
+	return "短信通道"
 }
 
 func (s *smsChannel) Type() string {

@@ -18,9 +18,9 @@ func (d *dispatcher) AddInterceptor(interceptor Interceptor) {
 }
 
 func (d *dispatcher) Send(ctx context.Context, message *message.Message) error {
-	channel := d.factory.GetChannel(message.GetChannelId())
+	channel := d.factory.GetChannel(message.ChannelId())
 	if channel == nil {
-		return ErrChannelNotFound(message.GetChannelId())
+		return ErrChannelNotFound(message.ChannelId())
 	}
 	if err := d.chain.Intercept(ctx, message, channel); err != nil {
 		return err

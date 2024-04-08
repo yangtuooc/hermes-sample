@@ -20,7 +20,7 @@ func (m *Message) GetHeader(key string) any {
 	return m.Headers[key]
 }
 
-func (m *Message) GetTo() []string {
+func (m *Message) To() []string {
 	to, ok := m.GetHeader(toKey).([]string)
 	if !ok {
 		return nil
@@ -36,7 +36,7 @@ func (m *Message) SetChannelId(channelId string) {
 	m.SetHeader(channelIdKey, channelId)
 }
 
-func (m *Message) GetChannelId() string {
+func (m *Message) ChannelId() string {
 	id, ok := m.GetHeader(channelIdKey).(string)
 	if !ok {
 		return ""
@@ -48,12 +48,16 @@ func (m *Message) SetRequestId(requestId string) {
 	m.SetHeader(requestIdKey, requestId)
 }
 
-func (m *Message) GetRequestId() string {
+func (m *Message) RequestId() string {
 	requestId, ok := m.GetHeader(requestIdKey).(string)
 	if !ok {
 		return ""
 	}
 	return requestId
+}
+
+func (m *Message) From() string {
+	return m.GetHeader(fromKey).(string)
 }
 
 func New(payload any) *Message {

@@ -2,7 +2,6 @@ package sms
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	"github.com/alibabacloud-go/dysmsapi-20170525/v3/client"
@@ -50,10 +49,13 @@ func (a *aliyunVendor) AddListener(listener channel.VendorListener) {
 }
 
 func (a *aliyunVendor) Send(ctx context.Context, message *message.Message) error {
+
 	adapter := NewAliyunMessageAdapter(message)
-	request, err := adapter.Adapt()
-	if err != nil {
-		return err
+	request := &client.SendSmsRequest{
+		SignName:      adapter.SignName(),
+		TemplateCode:  adapter.TemplateCode(),
+		TemplateParam: adapter.TemplateParam(),
+		PhoneNumbers:  adapter.PhoneNumbers(),
 	}
 
 	a.listeners.OnRequest(ctx, message, a, request)
@@ -86,7 +88,10 @@ func NewAliyunVendor(config *AliyunConfig) (channel.Vendor, error) {
 }
 
 type AliyunMessageAdapter interface {
-	Adapt() (*client.SendSmsRequest, error)
+	SignName() *string
+	TemplateCode() *string
+	TemplateParam() *string
+	PhoneNumbers() *string
 }
 
 var _ AliyunMessageAdapter = (*adapter)(nil)
@@ -95,40 +100,36 @@ type adapter struct {
 	message *message.Message
 }
 
-func (a *adapter) Adapt() (*client.SendSmsRequest, error) {
-	if a.message == nil {
-		return nil, errors.New("aliyun message adapter: message is nil")
+func (a *adapter) SignName() *string {
+	signName := a.message.GetHeader(SignNameKey)
+	if s, ok := signName.(string); ok {
+		return &s
 	}
+	return nil
+}
 
-	header := a.message.GetHeader(SignNameKey)
-	signName, ok := header.(string)
-	if !ok {
-		return nil, fmt.Errorf("aliyun message adapter: signName is required to be string, got %T", header)
+func (a *adapter) TemplateCode() *string {
+	templateCode := a.message.GetHeader(TemplateCodeKey)
+	if s, ok := templateCode.(string); ok {
+		return &s
 	}
+	return nil
+}
 
-	header = a.message.GetHeader(TemplateCodeKey)
-	templateCode, ok := header.(string)
-	if !ok {
-		return nil, fmt.Errorf("aliyun message adapter: templateCode is required to be string, got %T", header)
+func (a *adapter) TemplateParam() *string {
+	if p, ok := a.message.Payload.(string); ok {
+		return &p
 	}
+	return nil
+}
 
-	to := a.message.GetTo()
+func (a *adapter) PhoneNumbers() *string {
+	to := a.message.To()
 	if len(to) == 0 {
-		return nil, errors.New("aliyun message adapter: to is required")
+		return nil
 	}
-	joinedTo := strings.Join(to, ",")
-
-	payload, ok := a.message.Payload.(string)
-	if !ok {
-		return nil, fmt.Errorf("aliyun message adapter: payload is required to be string, got %T", a.message.Payload)
-	}
-
-	return &client.SendSmsRequest{
-		SignName:      &signName,
-		TemplateCode:  &templateCode,
-		TemplateParam: &payload,
-		PhoneNumbers:  &joinedTo,
-	}, nil
+	joined := strings.Join(to, ",")
+	return &joined
 }
 
 func NewAliyunMessageAdapter(message *message.Message) AliyunMessageAdapter {
