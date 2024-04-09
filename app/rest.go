@@ -1,9 +1,9 @@
-package rest
+package app
 
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"hermes/rest/template"
+	"hermes/app/template"
 )
 
 func Register(engine *gin.Engine, db *gorm.DB) {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"hermes/app/domain"
 	"hermes/channel"
 	"hermes/channel/message"
-	"hermes/rest/domain"
 	"hermes/sms"
 )
 

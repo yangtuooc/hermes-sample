@@ -2,7 +2,7 @@ package main
 
 import (
 	"gorm.io/gen"
-	"hermes/rest/domain"
+	"hermes/app/domain"
 )
 
 func main() {

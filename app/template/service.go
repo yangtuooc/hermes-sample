@@ -2,7 +2,7 @@ package template
 
 import (
 	"context"
-	"hermes/rest/domain"
+	"hermes/app/domain"
 )
 
 var _ domain.TemplateService = (*service)(nil)

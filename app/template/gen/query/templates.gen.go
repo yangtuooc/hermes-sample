@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"hermes/rest/domain"
+	"hermes/app/domain"
 )
 
 func newTemplate(db *gorm.DB, opts ...gen.DOOption) template {
