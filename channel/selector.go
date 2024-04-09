@@ -7,7 +7,7 @@ import (
 
 type SelectedVendor func(vendor Vendor) error
 
-// VendorSelector is a strategy to select a vendor to send a message
+// VendorSelector 是一个选择 Vendor 的策略，一个通道可以有多个Vendor，VendorSelector 用于选择一个 Vendor来发送消息
 type VendorSelector interface {
 	Select(ctx context.Context, message *message.Message, vendors Vendors, selected SelectedVendor) error
 }

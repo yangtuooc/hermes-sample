@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"hermes/web/rest"
+	"hermes/rest"
 )
 
 func main() {

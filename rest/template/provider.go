@@ -2,8 +2,8 @@ package template
 
 import (
 	"gorm.io/gorm"
-	"hermes/web/domain"
-	"hermes/web/template/gen/query"
+	"hermes/rest/domain"
+	"hermes/rest/template/gen/query"
 	"sync"
 )
 

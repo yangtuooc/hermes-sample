@@ -2,13 +2,13 @@ package main
 
 import (
 	"gorm.io/gen"
-	"hermes/web/domain"
+	"hermes/rest/domain"
 )
 
 func main() {
 	g := gen.NewGenerator(
 		gen.Config{
-			OutPath:      "web/template/gen/query",
+			OutPath:      "api/template/gen/query",
 			WithUnitTest: true,
 			Mode:         gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
 		},

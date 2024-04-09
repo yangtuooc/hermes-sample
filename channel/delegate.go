@@ -7,6 +7,7 @@ import (
 
 var _ AbstractChannel = (*delegateMessageChannel)(nil)
 
+// 这是一个抽象的消息通道，它将通道所具有的基本功能抽象出来，具体的通道可以组合这个抽象通道，实现通道的基本功能
 type delegateMessageChannel struct {
 	vendors  Vendors
 	chain    InterceptorChain

@@ -3,7 +3,7 @@ package rest
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"hermes/web/template"
+	"hermes/rest/template"
 )
 
 func Register(engine *gin.Engine, db *gorm.DB) {

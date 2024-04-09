@@ -3,11 +3,18 @@ package channel
 import (
 	"context"
 	"hermes/channel/message"
+	"sync"
+)
+
+var (
+	dispatcherInstance MessageChannel
+	dispatcherOnce     sync.Once
 )
 
 var _ MessageChannel = (*dispatcher)(nil)
 var _ InterceptableChannel = (*dispatcher)(nil)
 
+// 这是一个消息通道的统一调度器，由于消息通道的实现可能会有不同的实现，所以需要一个调度器来统一调度
 type dispatcher struct {
 	factory MessageChannelFactory
 	chain   InterceptorChain // global interceptor chain, all messages will go through this chain
@@ -29,5 +36,11 @@ func (d *dispatcher) Send(ctx context.Context, message *message.Message) error {
 }
 
 func NewDispatcher(factory MessageChannelFactory) MessageChannel {
-	return &dispatcher{factory: factory}
+	dispatcherOnce.Do(func() {
+		dispatcherInstance = &dispatcher{
+			factory: factory,
+			chain:   make(InterceptorChain, 0),
+		}
+	})
+	return dispatcherInstance
 }

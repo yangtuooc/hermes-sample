@@ -20,14 +20,16 @@ func (Message) TableName() string {
 }
 
 type SimpleMessage struct {
-	TemplateId string            `json:"templateId"`
-	To         []string          `json:"to"`
-	Args       map[string]string `json:"args"`
+	RequestId  string            `json:"requestId" binding:"required"`
+	TemplateId string            `json:"templateId" binding:"required"`
+	To         []string          `json:"to" binding:"required"`
+	Args       map[string]string `json:"args" binding:"required"`
+	Extra      map[string]string `json:"extra"`
 }
 
 type TimingMessage struct {
 	SimpleMessage
-	Cron string `json:"cron"`
+	Cron string `json:"cron" binding:"required"`
 }
 
 type MessageRepository interface {

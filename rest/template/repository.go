@@ -3,8 +3,8 @@ package template
 import (
 	"context"
 	"gorm.io/gorm"
-	"hermes/web/domain"
-	"hermes/web/template/gen/query"
+	"hermes/rest/domain"
+	"hermes/rest/template/gen/query"
 )
 
 var _ domain.TemplateRepository = (*repository)(nil)

@@ -38,6 +38,10 @@ func (t *Template) Render(args map[string]string) string {
 	return content
 }
 
+func (t *Template) ShallowCopy() Template {
+	return *t
+}
+
 type GenericTemplate struct {
 	Name        string `json:"name"`
 	Channel     string `json:"channel"`

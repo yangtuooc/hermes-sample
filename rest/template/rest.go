@@ -2,8 +2,8 @@ package template
 
 import (
 	"github.com/gin-gonic/gin"
-	"hermes/web/domain"
-	"hermes/web/rest"
+	"hermes/rest/api"
+	"hermes/rest/domain"
 )
 
 type Controller struct {
@@ -13,27 +13,27 @@ type Controller struct {
 func (c *Controller) CreateGenericTemplate(ctx *gin.Context) {
 	var req domain.GenericTemplate
 	if err := ctx.ShouldBind(&req); err != nil {
-		rest.ResponseBadRequest(ctx, err.Error())
+		api.ResponseBadRequest(ctx, err.Error())
 		return
 	}
 	err := c.svc.CreateGenericTemplate(ctx, &req)
 	if err != nil {
-		rest.ResponseInternalServerError(ctx, err.Error())
+		api.ResponseInternalServerError(ctx, err.Error())
 		return
 	}
-	rest.ResponseCreated(ctx, nil)
+	api.ResponseCreated(ctx, nil)
 }
 
 func (c *Controller) CreateClientTemplate(ctx *gin.Context) {
 	var req domain.ClientTemplate
 	if err := ctx.ShouldBind(&req); err != nil {
-		rest.ResponseBadRequest(ctx, err.Error())
+		api.ResponseBadRequest(ctx, err.Error())
 		return
 	}
 	err := c.svc.CreateClientTemplate(ctx, &req)
 	if err != nil {
-		rest.ResponseInternalServerError(ctx, err.Error())
+		api.ResponseInternalServerError(ctx, err.Error())
 		return
 	}
-	rest.ResponseCreated(ctx, nil)
+	api.ResponseCreated(ctx, nil)
 }

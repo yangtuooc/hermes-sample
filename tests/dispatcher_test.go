@@ -57,7 +57,8 @@ func TestDispatcherCase3(t *testing.T) {
 	if err := smsChannel.Register(vendor); err != nil {
 		t.Error(err)
 	}
-	factory := channel.NewFactory(smsChannel)
+	factory := channel.NewFactory()
+	factory.Register(smsChannel)
 	dispatcher := channel.NewDispatcher(factory)
 
 	ctx := context.Background()

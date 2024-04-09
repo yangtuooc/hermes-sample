@@ -1,11 +1,20 @@
 package channel
 
+import "sync"
+
+var (
+	factoryInstance MessageChannelFactory
+	factoryOnce     sync.Once
+)
+
+// MessageChannelFactory 消息通道工厂，用于获取消息通道
 type MessageChannelFactory interface {
-	GetChannel(id string) MessageChannel
-	Channels() MessageChannels
+	GetChannel(id string) NamedChannel
+	Channels() NamedChannels
 	Registry
 }
 
+// Registry 注册中心，用于注册消息通道
 type Registry interface {
 	Register(channel NamedChannel)
 }
@@ -13,18 +22,18 @@ type Registry interface {
 var _ MessageChannelFactory = (*factory)(nil)
 
 type factory struct {
-	registry map[string]MessageChannel
+	registry map[string]NamedChannel
 }
 
-func (f *factory) Channels() MessageChannels {
-	channels := make(MessageChannels, 0, len(f.registry))
+func (f *factory) Channels() NamedChannels {
+	channels := make(NamedChannels, 0, len(f.registry))
 	for _, channel := range f.registry {
 		channels = append(channels, channel)
 	}
 	return channels
 }
 
-func (f *factory) GetChannel(id string) MessageChannel {
+func (f *factory) GetChannel(id string) NamedChannel {
 	return f.registry[id]
 }
 
@@ -33,11 +42,13 @@ func (f *factory) Register(channel NamedChannel) {
 }
 
 func NewFactory(channels ...NamedChannel) MessageChannelFactory {
-	f := &factory{
-		registry: make(map[string]MessageChannel),
-	}
-	for _, channel := range channels {
-		f.Register(channel)
-	}
-	return f
+	factoryOnce.Do(func() {
+		factoryInstance = &factory{
+			registry: make(map[string]NamedChannel, len(channels)),
+		}
+		for _, channel := range channels {
+			factoryInstance.Register(channel)
+		}
+	})
+	return factoryInstance
 }

@@ -13,7 +13,7 @@ type deduplicationInterceptor struct {
 	sent map[string]bool
 }
 
-func (i *deduplicationInterceptor) Intercept(ctx context.Context, message *message.Message, vendor channel.MessageChannel) error {
+func (i *deduplicationInterceptor) Intercept(ctx context.Context, message *message.Message, vendor channel.NamedChannel) error {
 	if i.sent[message.RequestId()] {
 		return errors.New("message already sent")
 	}
