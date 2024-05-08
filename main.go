@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"hermes/rest"
+	"hermes/app"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 		panic("failed to connect database")
 	}
 	engine := gin.Default()
-	rest.Register(engine, db)
+	app.Register(engine, db)
 
 	if err := engine.Run(":8080"); err != nil {
 		panic("failed to start server")

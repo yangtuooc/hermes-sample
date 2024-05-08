@@ -1,8 +1,8 @@
 package message
 
 import (
+	"hermes/app/domain"
 	"hermes/channel/message"
-	"hermes/rest/domain"
 )
 
 func buildSimpleMessage(template *domain.Template, simpleMessage *domain.SimpleMessage) *message.Message {

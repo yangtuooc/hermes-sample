@@ -3,7 +3,7 @@ package message
 import (
 	"context"
 	"hermes/channel"
-	"hermes/rest/domain"
+	"hermes/app/domain"
 )
 
 var _ domain.MessageService = (*service)(nil)

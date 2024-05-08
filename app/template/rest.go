@@ -2,8 +2,8 @@ package template
 
 import (
 	"github.com/gin-gonic/gin"
-	"hermes/rest/api"
-	"hermes/rest/domain"
+	"hermes/app/api"
+	"hermes/app/domain"
 )
 
 type Controller struct {

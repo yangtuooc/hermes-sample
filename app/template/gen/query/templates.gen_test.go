@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"testing"
 
-	"hermes/rest/domain"
+	"hermes/app/domain"
 
 	"gorm.io/gen"
 	"gorm.io/gen/field"
